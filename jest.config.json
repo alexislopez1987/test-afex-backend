@@ -1,0 +1,6 @@
+{
+  "bail": 1,
+  "verbose": true,
+  "coverageDirectory": "coverage",
+  "testMatch": ["**/?(*.)+(spec|test).[t]s?(x)"]
+}
