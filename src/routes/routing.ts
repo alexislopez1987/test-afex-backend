@@ -1,8 +1,8 @@
 import express from "express";
-import { getMessages } from "../controllers/message.controller";
+import { getYoutubeVideoById } from "../controllers/youtube.controller";
 
 const indexRouter = express.Router();
 
-indexRouter.get("/messages", getMessages);
+indexRouter.get("/youtube-video/:videoId", getYoutubeVideoById);
 
 export default indexRouter;

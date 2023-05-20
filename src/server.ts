@@ -15,7 +15,7 @@ const createServer = () => {
 
   app.get("/", (req: Request, res: Response) => {
     res.json({
-      message: `app_test nodejs 🙂`,
+      message: `youtube test nodejs 🙂`,
     });
   });
 

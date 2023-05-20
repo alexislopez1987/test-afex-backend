@@ -1,9 +1,9 @@
-import "dotenv/config";
+require("dotenv").config();
 import createServer from "./server";
+import settings from "./config/settings";
 
-//require("dotenv").config();
+const port = settings.PORT;
 
-const port = parseInt(process.env.PORT?.toString() ?? "8095", 10);
 const app = createServer();
 
 app.listen(port, () => {
