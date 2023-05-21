@@ -4,6 +4,7 @@ import {
   getVideoById,
   createVideoRepo,
   getAllVideosRepo,
+  deleteVideoByIdRepo,
 } from "../repository/youtube.repository";
 
 interface ReqParams {
@@ -46,21 +47,31 @@ export const createVideo = async (
   res: Response
 ) => {
   const { videoId } = req.body;
-  const youtubeVideo = await getVideoById(videoId);
 
   try {
-    if (youtubeVideo) {
-      await createVideoRepo();
-      res.status(StatusCodes.OK).json({ message: "Video guardado en album" });
-    } else {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        messages: `error obteniendo video en youtube con id  ${videoId}`,
-      });
-    }
+    const youtubeVideo = await getVideoById(videoId);
+    await createVideoRepo(youtubeVideo);
+    res.status(StatusCodes.OK).json({ message: "Video guardado en album" });
   } catch (err) {
     console.error("error guardando video en album", err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       messages: `error guardando video en album`,
+    });
+  }
+};
+
+export const deleteVideoById = async (
+  req: Request<ReqParams, {}, {}, {}>,
+  res: Response
+) => {
+  const { videoId } = req.params;
+  try {
+    await deleteVideoByIdRepo(videoId);
+    res.status(StatusCodes.OK);
+  } catch (err) {
+    console.error(`error borrando video en youtube con id ${videoId}`, err);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      messages: `error borrando video en youtube con id ${videoId}`,
     });
   }
 };

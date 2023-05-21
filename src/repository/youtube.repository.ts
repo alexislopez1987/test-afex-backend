@@ -24,6 +24,10 @@ export const getAllVideosRepo = async () => {
   return videos;
 };
 
-export const createVideoRepo = async (): Promise<void> => {
+export const createVideoRepo = async (newVideo: Video): Promise<void> => {
   //TODO: guarda video en BD
+};
+
+export const deleteVideoByIdRepo = async (videoId: string): Promise<void> => {
+  //TODO: borra video en BD
 };
