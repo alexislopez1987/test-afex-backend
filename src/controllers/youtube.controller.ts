@@ -1,12 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
 import {
-  getYoutubeVideoByIdRepo,
-  createVideoRepo,
-  getAllVideosRepo,
-  deleteVideoByIdRepo,
-  getVideoByIdRepo,
-} from "../repository/youtube.repository";
+  createVideoService,
+  deleteVideoByIdService,
+  getAllVideosService,
+  getYoutubeVideoByIdService,
+} from "../services/youtube.service";
 
 interface ReqParams {
   videoId: string;
@@ -18,7 +17,7 @@ export const getYoutubeVideoById = async (
 ) => {
   const { videoId } = req.params;
   try {
-    const data = await getYoutubeVideoByIdRepo(videoId);
+    const data = await getYoutubeVideoByIdService(videoId);
     res.status(StatusCodes.OK).json({ message: data });
   } catch (err) {
     console.error("error obteniendo video en youtube", err);
@@ -33,7 +32,7 @@ export const getAllVideos = async (
   res: Response
 ) => {
   try {
-    const data = await getAllVideosRepo();
+    const data = await getAllVideosService();
     res.status(StatusCodes.OK).json({ message: data });
   } catch (err) {
     console.error("error obteniendo videos", err);
@@ -50,16 +49,7 @@ export const createVideo = async (
   const { videoId } = req.body;
 
   try {
-    const youtubeVideo = await getYoutubeVideoByIdRepo(videoId);
-    const validateVideoAlreadySaved = await getVideoByIdRepo(videoId);
-
-    if (!validateVideoAlreadySaved) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: `Video con id ${videoId} ya esta guardado en album` });
-    }
-
-    await createVideoRepo(youtubeVideo);
+    await createVideoService(videoId);
     res.status(StatusCodes.OK).json({ message: "Video guardado en album" });
   } catch (err) {
     console.error("error guardando video en album", err);
@@ -75,7 +65,7 @@ export const deleteVideoById = async (
 ) => {
   const { videoId } = req.params;
   try {
-    await deleteVideoByIdRepo(videoId);
+    await deleteVideoByIdService(videoId);
     res.status(StatusCodes.OK);
   } catch (err) {
     console.error(`error borrando video en youtube con id ${videoId}`, err);
