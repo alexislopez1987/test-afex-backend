@@ -2,6 +2,10 @@ import { Video } from "../models/video.model";
 import axios from "axios";
 import settings from "./../config/settings";
 import { StatusCodes } from "http-status-codes";
+import { VideoAlbum } from "../models/video-album.model";
+import { pool } from "../config/pools";
+
+const table = "dbo.video_album";
 
 export const getYoutubeVideoByIdRepo = async (
   videoId: string
@@ -18,29 +22,58 @@ export const getYoutubeVideoByIdRepo = async (
 };
 
 export const getAllVideosRepo = async () => {
-  //TODO: obtener videos en BD
-  const videos = new Promise<Video[]>(function (resolve, reject) {
-    resolve([]);
-  });
+  const videos = await pool.query<VideoAlbum>(`SELECT * FROM ${table}`);
 
-  return videos;
+  return videos.rows;
 };
 
 export const getVideoByIdRepo = async (
   videoId: string
-): Promise<Video | undefined> => {
-  //TODO: obtiene video en BD
-  const video = new Promise<Video>(function (resolve, reject) {
-    resolve({} as Video);
-  });
+): Promise<VideoAlbum | undefined> => {
+  const videos = await pool.query<VideoAlbum>(
+    `SELECT * FROM ${table} WHERE video_id = $1`,
+    [videoId]
+  );
 
-  return video;
+  return videos.rows[0];
 };
 
-export const createVideoRepo = async (newVideo: Video): Promise<void> => {
-  //TODO: guarda video en BD
+export const createVideoRepo = async (newVideo: VideoAlbum): Promise<void> => {
+  const query = `
+        INSERT INTO ${table} (video_id, description, url, thumbnail_default, thumbnail_medium, thumbnail_high, thumbnail_standard, thumbnail_maxres)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING video_id, description, url, thumbnail_default, thumbnail_medium, thumbnail_high, thumbnail_standard, thumbnail_maxres
+    `;
+
+  const {
+    video_id,
+    description,
+    url,
+    thumbnail_default,
+    thumbnail_medium,
+    thumbnail_high,
+    thumbnail_standard,
+    thumbnail_maxres,
+  } = newVideo;
+
+  try {
+    pool.query(query, [
+      video_id,
+      description,
+      url,
+      thumbnail_default,
+      thumbnail_medium,
+      thumbnail_high,
+      thumbnail_standard,
+      thumbnail_maxres,
+    ]);
+  } catch (error) {
+    const errMsg = "error al insertar video en album";
+    console.error(errMsg, error);
+    throw new Error(errMsg);
+  }
 };
 
 export const deleteVideoByIdRepo = async (videoId: string): Promise<void> => {
-  //TODO: borra video en BD
+  await pool.query(`DELETE FROM ${table} WHERE video_id = $1`, [videoId]);
 };

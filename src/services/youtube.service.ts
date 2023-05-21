@@ -1,3 +1,4 @@
+import { VideoAlbum } from "../models/video-album.model";
 import { Video } from "../models/video.model";
 import {
   createVideoRepo,
@@ -15,7 +16,7 @@ export const getAllVideosService = async () => {
 
 export const getVideoByIdService = async (
   videoId: string
-): Promise<Video | undefined> => {
+): Promise<VideoAlbum | undefined> => {
   const video = await getVideoByIdRepo(videoId);
 
   return video;
@@ -29,7 +30,18 @@ export const createVideoService = async (videoId: string): Promise<void> => {
     throw new Error(`Video con id ${videoId} ya esta guardado en album`);
   }
 
-  await createVideoRepo(youtubeVideo);
+  const newVideoAlbum: VideoAlbum = {
+    video_id: videoId,
+    description: youtubeVideo.items[0].snippet.description,
+    url: `https://www.youtube.com/watch?v=${videoId}`,
+    thumbnail_default: youtubeVideo.items[0].snippet.thumbnails.default.url,
+    thumbnail_medium: youtubeVideo.items[0].snippet.thumbnails.medium.url,
+    thumbnail_high: youtubeVideo.items[0].snippet.thumbnails.high.url,
+    thumbnail_standard: youtubeVideo.items[0].snippet.thumbnails.standard.url,
+    thumbnail_maxres: youtubeVideo.items[0].snippet.thumbnails.maxres.url,
+  };
+
+  await createVideoRepo(newVideoAlbum);
 };
 
 export const deleteVideoByIdService = async (
