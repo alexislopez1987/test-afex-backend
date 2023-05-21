@@ -11,7 +11,7 @@ export const getYoutubeVideoByIdRepo = async (
   );
 
   if (video.status === StatusCodes.NOT_FOUND) {
-    throw new Error(`Video con id ${videoId} no fue encontrado`);
+    throw new Error(`Video con id ${videoId} no fue encontrado en youtube`);
   }
 
   return video.data;
