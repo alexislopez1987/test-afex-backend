@@ -1,7 +1,8 @@
+import configDBSchema from "../validations/configdb.validation";
+
 const settings = {
   PORT: parseInt(process.env.PORT?.toString() ?? "8096", 10),
   API_KEY_YOUTUBE: process.env.API_KEY_YOUTUBE ?? "",
-  DB_URL: process.env.DB_URL ?? "",
 };
 
 const DB_USER = process.env.DB_USER ?? "";
@@ -17,6 +18,8 @@ export const configDB = {
   password: DB_PASSWORD,
   port: DB_PORT,
 };
+
+configDBSchema.validateSync(configDB);
 
 export const dbUrl = `postgresql://${configDB.user}:${configDB.password}@${configDB.host}:${configDB.port}/${configDB.database}`;
 
