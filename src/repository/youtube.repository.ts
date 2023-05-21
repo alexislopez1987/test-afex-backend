@@ -5,7 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import { VideoAlbum } from "../models/video-album.model";
 import { pool } from "../config/pools";
 
-const table = "dbo.video_album";
+const table = "public.video_album";
 
 export const getYoutubeVideoByIdRepo = async (
   videoId: string
