@@ -1,9 +1,12 @@
 import configDBSchema from "../validations/configdb.validation";
+import configSettingsSchema from "../validations/configsettings.validation";
 
 const settings = {
   PORT: parseInt(process.env.PORT?.toString() ?? "8096", 10),
   API_KEY_YOUTUBE: process.env.API_KEY_YOUTUBE ?? "",
 };
+
+configSettingsSchema.validateSync(settings);
 
 const DB_USER = process.env.DB_USER ?? "";
 const DB_HOST = process.env.DB_HOST ?? "";
