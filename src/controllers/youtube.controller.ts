@@ -1,10 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
 import {
-  getVideoById,
+  getYoutubeVideoByIdRepo,
   createVideoRepo,
   getAllVideosRepo,
   deleteVideoByIdRepo,
+  getVideoByIdRepo,
 } from "../repository/youtube.repository";
 
 interface ReqParams {
@@ -17,7 +18,7 @@ export const getYoutubeVideoById = async (
 ) => {
   const { videoId } = req.params;
   try {
-    const data = await getVideoById(videoId);
+    const data = await getYoutubeVideoByIdRepo(videoId);
     res.status(StatusCodes.OK).json({ message: data });
   } catch (err) {
     console.error("error obteniendo video en youtube", err);
@@ -49,7 +50,15 @@ export const createVideo = async (
   const { videoId } = req.body;
 
   try {
-    const youtubeVideo = await getVideoById(videoId);
+    const youtubeVideo = await getYoutubeVideoByIdRepo(videoId);
+    const validateVideoAlreadySaved = await getVideoByIdRepo(videoId);
+
+    if (!validateVideoAlreadySaved) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: `Video con id ${videoId} ya esta guardado en album` });
+    }
+
     await createVideoRepo(youtubeVideo);
     res.status(StatusCodes.OK).json({ message: "Video guardado en album" });
   } catch (err) {

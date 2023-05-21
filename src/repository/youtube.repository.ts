@@ -3,7 +3,9 @@ import axios from "axios";
 import settings from "./../config/settings";
 import { StatusCodes } from "http-status-codes";
 
-export const getVideoById = async (videoId: string): Promise<Video> => {
+export const getYoutubeVideoByIdRepo = async (
+  videoId: string
+): Promise<Video> => {
   const video = await axios.get<Video>(
     `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${settings.API_KEY_YOUTUBE}&part=snippet`
   );
@@ -22,6 +24,17 @@ export const getAllVideosRepo = async () => {
   });
 
   return videos;
+};
+
+export const getVideoByIdRepo = async (
+  videoId: string
+): Promise<Video | undefined> => {
+  //TODO: obtiene video en BD
+  const video = new Promise<Video>(function (resolve, reject) {
+    resolve({} as Video);
+  });
+
+  return video;
 };
 
 export const createVideoRepo = async (newVideo: Video): Promise<void> => {
