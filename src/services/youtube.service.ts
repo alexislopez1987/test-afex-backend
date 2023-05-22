@@ -39,6 +39,7 @@ export const createVideoService = async (videoId: string): Promise<void> => {
     thumbnail_high: youtubeVideo.items[0].snippet.thumbnails.high.url,
     thumbnail_standard: youtubeVideo.items[0].snippet.thumbnails.standard.url,
     thumbnail_maxres: youtubeVideo.items[0].snippet.thumbnails.maxres.url,
+    duration: "15:00", //TODO: en duro
   };
 
   await createVideoRepo(newVideoAlbum);

@@ -1,6 +1,7 @@
 export interface VideoAlbum {
   video_id: string;
   description: string;
+  duration: string;
   url: string;
   thumbnail_default: string;
   thumbnail_medium: string;

@@ -33,7 +33,7 @@ export const getAllVideos = async (
 ) => {
   try {
     const data = await getAllVideosService();
-    res.status(StatusCodes.OK).json({ message: data });
+    res.status(StatusCodes.OK).json(data);
   } catch (err) {
     console.error("error obteniendo videos", err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
