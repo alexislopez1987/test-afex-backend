@@ -24,11 +24,6 @@ export const getVideoByIdService = async (
 
 export const createVideoService = async (videoId: string): Promise<void> => {
   const youtubeVideo = await getYoutubeVideoByIdRepo(videoId);
-  const validateVideoAlreadySaved = await getVideoByIdRepo(videoId);
-
-  if (validateVideoAlreadySaved !== undefined) {
-    throw new Error(`Video con id ${videoId} ya esta guardado en album`);
-  }
 
   const newVideoAlbum: VideoAlbum = {
     video_id: videoId,

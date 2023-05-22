@@ -6,6 +6,7 @@ import {
   getAllVideosService,
   getYoutubeVideoByIdService,
 } from "../services/youtube.service";
+import { getVideoByIdRepo } from "../repository/youtube.repository";
 
 interface ReqParams {
   videoId: string;
@@ -49,8 +50,17 @@ export const createVideo = async (
   const { videoId } = req.body;
 
   try {
-    await createVideoService(videoId);
-    res.status(StatusCodes.OK).json("Video guardado en album");
+    const validateVideoAlreadySaved = await getVideoByIdRepo(videoId);
+
+    if (validateVideoAlreadySaved !== undefined) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json(`Video con id ${videoId} ya esta guardado en album`);
+    } else {
+      console.log("aca", validateVideoAlreadySaved);
+      await createVideoService(videoId);
+      res.status(StatusCodes.OK).json("Video guardado en album");
+    }
   } catch (err) {
     console.error("error guardando video en album", err);
     res
