@@ -24,6 +24,10 @@ export const getYoutubeVideoByIdRepo = async (
 export const getAllVideosRepo = async () => {
   const videos = await pool.query<VideoAlbum>(`SELECT * FROM ${table}`);
 
+  if (videos.rowCount === 0) {
+    return [];
+  }
+
   return videos.rows;
 };
 
@@ -43,9 +47,9 @@ export const getVideoByIdRepo = async (
 
 export const createVideoRepo = async (newVideo: VideoAlbum): Promise<void> => {
   const query = `
-        INSERT INTO ${table} (video_id, description, url, thumbnail_default, thumbnail_medium, thumbnail_high, thumbnail_standard, thumbnail_maxres)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-        RETURNING video_id, description, url, thumbnail_default, thumbnail_medium, thumbnail_high, thumbnail_standard, thumbnail_maxres
+        INSERT INTO ${table} (video_id, description, url, thumbnail_default, thumbnail_medium, thumbnail_high, thumbnail_standard, thumbnail_maxres, duration)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        RETURNING video_id, description, url, thumbnail_default, thumbnail_medium, thumbnail_high, thumbnail_standard, thumbnail_maxres, duration
     `;
 
   const {
@@ -57,6 +61,7 @@ export const createVideoRepo = async (newVideo: VideoAlbum): Promise<void> => {
     thumbnail_high,
     thumbnail_standard,
     thumbnail_maxres,
+    duration,
   } = newVideo;
 
   try {
@@ -69,6 +74,7 @@ export const createVideoRepo = async (newVideo: VideoAlbum): Promise<void> => {
       thumbnail_high,
       thumbnail_standard,
       thumbnail_maxres,
+      duration,
     ]);
   } catch (error) {
     const errMsg = "error al insertar video en album";
@@ -78,5 +84,11 @@ export const createVideoRepo = async (newVideo: VideoAlbum): Promise<void> => {
 };
 
 export const deleteVideoByIdRepo = async (videoId: string): Promise<void> => {
-  await pool.query(`DELETE FROM ${table} WHERE video_id = $1`, [videoId]);
+  try {
+    await pool.query(`DELETE FROM ${table} WHERE video_id = $1`, [videoId]);
+  } catch (error) {
+    const errMsg = "error al borrar video en album";
+    console.error(errMsg, error);
+    throw new Error(errMsg);
+  }
 };
