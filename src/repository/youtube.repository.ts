@@ -30,12 +30,15 @@ export const getAllVideosRepo = async () => {
 export const getVideoByIdRepo = async (
   videoId: string
 ): Promise<VideoAlbum | undefined> => {
-  const videos = await pool.query<VideoAlbum>(
-    `SELECT * FROM ${table} WHERE video_id = $1`,
-    [videoId]
-  );
+  const video = await pool.query(`SELECT * FROM ${table} WHERE video_id = $1`, [
+    videoId,
+  ]);
 
-  return videos.rows[0];
+  if (video.rowCount === 0) {
+    return undefined;
+  } else {
+    return video.rows[0];
+  }
 };
 
 export const createVideoRepo = async (newVideo: VideoAlbum): Promise<void> => {

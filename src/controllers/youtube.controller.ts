@@ -18,7 +18,7 @@ export const getYoutubeVideoById = async (
   const { videoId } = req.params;
   try {
     const data = await getYoutubeVideoByIdService(videoId);
-    res.status(StatusCodes.OK).json({ message: data });
+    res.status(StatusCodes.OK).json(data);
   } catch (err) {
     console.error("error obteniendo video en youtube", err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -50,7 +50,7 @@ export const createVideo = async (
 
   try {
     await createVideoService(videoId);
-    res.status(StatusCodes.OK).json({ message: "Video guardado en album" });
+    res.status(StatusCodes.OK).json("Video guardado en album");
   } catch (err) {
     console.error("error guardando video en album", err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
