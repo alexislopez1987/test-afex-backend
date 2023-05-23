@@ -4,9 +4,9 @@ import {
   createVideoService,
   deleteVideoByIdService,
   getAllVideosService,
+  getVideoByIdService,
   getYoutubeVideoByIdService,
 } from "../services/youtube.service";
-import { getVideoByIdRepo } from "../repository/youtube.repository";
 
 interface ReqParams {
   videoId: string;
@@ -50,7 +50,7 @@ export const createVideo = async (
   const { videoId } = req.body;
 
   try {
-    const validateVideoAlreadySaved = await getVideoByIdRepo(videoId);
+    const validateVideoAlreadySaved = await getVideoByIdService(videoId);
 
     if (validateVideoAlreadySaved !== undefined) {
       res
