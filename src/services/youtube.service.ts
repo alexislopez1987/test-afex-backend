@@ -25,9 +25,15 @@ export const getVideoByIdService = async (
 export const createVideoService = async (videoId: string): Promise<void> => {
   const youtubeVideo = await getYoutubeVideoByIdRepo(videoId);
 
+  let youtubeVideoDescription = youtubeVideo.items[0].snippet.description;
+
+  if (youtubeVideoDescription.length > 2000) {
+    youtubeVideoDescription = youtubeVideoDescription.substring(0, 1999);
+  }
+
   const newVideoAlbum: VideoAlbum = {
     video_id: videoId,
-    description: youtubeVideo.items[0].snippet.description,
+    description: youtubeVideoDescription,
     url: `https://www.youtube.com/watch?v=${videoId}`,
     thumbnail_default: youtubeVideo.items[0].snippet.thumbnails.default.url,
     thumbnail_medium: youtubeVideo.items[0].snippet.thumbnails.medium.url,
